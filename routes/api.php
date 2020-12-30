@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\CategoriesController;
+use App\Http\Controllers\API\BooksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +18,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+	Route::post('login', [App\Http\Controllers\API\AuthController::class, 'login']);
+
+Route::group(['prefix' => 'control', 'middleware' => 'auth:api'], function() {
+	Route::group(['prefix' => 'category'], function() {
+		Route::get('all', [CategoriesController::class, 'index']);
+		Route::post('store', [CategoriesController::class, 'store']);
+		Route::put('update/{id}', [CategoriesController::class, 'update']);
+		Route::get('delete/{id}', [CategoriesController::class, 'destroy']);
+	});
+
+	Route::group(['prefix' => 'gift'], function() {
+		Route::get('all', [GiftsController::class, 'index']);
+		Route::post('store', [GiftsController::class, 'store']);
+		Route::put('update/{id}', [GiftsController::class, 'update']);
+		Route::get('delete/{id}', [GiftsController::class, 'destroy']);
+	});
 });
